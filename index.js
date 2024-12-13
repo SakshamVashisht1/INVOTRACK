@@ -1,33 +1,20 @@
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
-const AuthRouter = require('./Routes/AuthRouter');
-const ProductRouter = require('./Routes/ProductRouter');
-const contactRoutes = require('./Routes/contactRoutes');
+const authRouter = require('./Routes/AuthRouter');
 const invoiceRoutes = require('./Routes/invoiceRoutes');
-
-dotenv.config();
+require('dotenv').config();
 require('./Models/db');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(express.json()); // Use express.json() instead of bodyParser.json()
 app.use(cors());
-
-// Test Route
-app.get('/ping', (req, res) => {
-    res.send('PING');
-});
+app.use(express.json());
 
 // Routes
-app.use('/auth', AuthRouter);
-app.use('/products', ProductRouter);
-app.use('/api/contacts', contactRoutes); // Mount contact routes under /api/contacts
-app.use('/api/invoices', invoiceRoutes); // Mount invoice routes under /api/invoices
+app.use('/auth', authRouter);
+app.use('/api/invoices', invoiceRoutes);
 
-// Server Listening
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
